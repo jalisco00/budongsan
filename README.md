@@ -1,7 +1,7 @@
 # 🏢 대한민국 부동산 전문가 예측 교차분석 & 시계열 지식그래프 종합 관제 대시보드
 > **Korea Real Estate Expert Predictions Cross-Analysis & Time-Series Knowledge Graph Dashboard (2018~2026)**
 
-[![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue?style=for-the-badge&logo=github)](https://iverson-ko.github.io/budongsan/)
+[![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue?style=for-the-badge&logo=github)](https://jalisco00.github.io/budongsan/)
 [![Vercel](https://img.shields.io/badge/Vercel-Deployed-black?style=for-the-badge&logo=vercel)](https://budongsan.vercel.app)
 [![Data Period](https://img.shields.io/badge/Data%20Period-2018.01%20~%202026.08%20(104M)-success?style=for-the-badge)]()
 
@@ -9,8 +9,8 @@
 
 ## 🌐 실시간 웹 접속 주소 (Live URL)
 
-* 📊 **실시간 인터랙티브 종합 대시보드**: **[`https://iverson-ko.github.io/budongsan/`](https://iverson-ko.github.io/budongsan/)**
-* 🕸️ **Graphify 3D 지식그래프 뷰어**: **[`https://iverson-ko.github.io/budongsan/graph.html`](https://iverson-ko.github.io/budongsan/graph.html)**
+* 📊 **실시간 인터랙티브 종합 대시보드**: **[`https://jalisco00.github.io/budongsan/`](https://jalisco00.github.io/budongsan/)**
+* 🕸️ **Graphify 3D 지식그래프 뷰어**: **[`https://jalisco00.github.io/budongsan/graph.html`](https://jalisco00.github.io/budongsan/graph.html)**
 
 ---
 
