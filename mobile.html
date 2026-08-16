@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>부동산 전문가 예측 관제 - 모바일</title>
+  <link rel="stylesheet" href="mobile.css">
+  <script src="vendor/chart.umd.min.js"></script>
+  <script src="static/dashboard_data.js"></script>
+</head>
+<body>
+
+  <!-- 1. Mobile Header & Region Selector -->
+  <header class="mobile-header">
+    <div class="m-brand-row">
+      <div class="m-logo-group">
+        <span class="m-logo-icon">🏢</span>
+        <span class="m-logo-title">부동산 예측 관제 모바일</span>
+      </div>
+      <span class="m-badge-live">● LIVE 104M</span>
+    </div>
+
+    <div class="m-region-select-wrap">
+      <select id="m-select-region" class="m-region-select">
+        <optgroup label="🏛️ 서울 핵심 권역">
+          <option value="서울" selected>서울 전체 (종합)</option>
+          <option value="강남구">강남구 (강남3구 핵심)</option>
+          <option value="서초구">서초구 (반포·서초)</option>
+          <option value="송파구">송파구 (잠실·가락)</option>
+          <option value="마포구">마포구 (마용성 도심)</option>
+          <option value="성동구">성동구 (성수·옥수)</option>
+          <option value="노원구">노원구 (노도강 동북)</option>
+        </optgroup>
+        <optgroup label="🚄 수도권 신도시 & 1기">
+          <option value="분당 (성남 분당 서현/수내/정자 학군·재건축)">분당 (서현·수내 학군/재건축)</option>
+          <option value="동탄 (화성 동탄1/동탄2/GTX-A)">동탄 (동탄1/2/GTX-A)</option>
+          <option value="광교 (수원 영통/광교신도시)">광교 (영통/광교신도시)</option>
+          <option value="수지 (용인 수지 풍덕천/성복/신봉)">수지 (풍덕천/성복 신분당선)</option>
+          <option value="일산 (고양 일산 주엽/마두/백석 1기신도시)">일산 (주엽/마두 1기신도시)</option>
+        </optgroup>
+        <optgroup label="🏫 수원 세분화">
+          <option value="수원 학군지 (영통동/광교 에듀타운)">수원 학군지 (영통/광교)</option>
+          <option value="수원 비학군지 (권선/장안 구도심)">수원 비학군지 (구도심)</option>
+          <option value="수원 역세권 (수원역 GTX-C/광교중앙역)">수원 역세권 (수원역/광교중앙)</option>
+          <option value="수원 비역세권 (도보 20분이상 외곽)">수원 비역세권 (외곽)</option>
+        </optgroup>
+        <optgroup label="🌊 지방 광역시 세분화">
+          <option value="지방광역시 학군지 (대구 수성구/부산 사직·남천/대전 둔산)">지방 학군지 (수성구/사직/둔산)</option>
+          <option value="지방광역시 비학군지 (광역시 외곽 구도심)">지방 비학군지 (외곽 구도심)</option>
+          <option value="지방광역시 역세권 (도시철도 역세 500m이내)">지방 역세권 (역세 500m)</option>
+          <option value="지방광역시 비역세권 (도시철도 미연계 외곽/미분양적체)">지방 비역세권 (미분양 적체)</option>
+          <option value="부산">부산광역시 (해운대/수영)</option>
+          <option value="대구">대구광역시 (수성구)</option>
+          <option value="세종">세종특별자치시 (행정수도)</option>
+          <option value="전국">전국 (전체 평균)</option>
+        </optgroup>
+      </select>
+    </div>
+  </header>
+
+  <!-- 2. Sticky Mobile Quick Nav -->
+  <nav class="m-nav-bar">
+    <div class="m-nav-item active" data-target="m-sec-chart">📈 차트·핀</div>
+    <div class="m-nav-item" data-target="m-sec-feed">🕒 104M 연대기</div>
+    <div class="m-nav-item" data-target="m-sec-ranking">🏆 20인 적중률</div>
+    <div class="m-nav-item" data-target="m-sec-links">🕸️ 인과망</div>
+  </nav>
+
+  <!-- 3. Section 1: Interactive Touch Chart -->
+  <section id="m-sec-chart" class="m-section">
+    <div class="m-section-header">
+      <h2 class="m-section-title">📈 <span id="m-chart-reg-title">서울</span> 가격곡선 & 전문가 핀</h2>
+      <p class="m-section-desc">차트를 터치하면 해당 월의 정책과 전문가 발언이 팝업됩니다.</p>
+    </div>
+
+    <div class="m-chart-card">
+      <div class="m-chart-wrapper">
+        <canvas id="mMarketChart"></canvas>
+      </div>
+
+      <div class="m-chart-chips">
+        <span class="m-chip active" id="m-toggle-sales">매매지수</span>
+        <span class="m-chip active" id="m-toggle-jeonse">전세지수</span>
+        <span class="m-chip active" id="m-toggle-rate">기준금리</span>
+        <span class="m-chip" id="m-toggle-unsold">미분양</span>
+        <span class="m-chip active" id="m-toggle-pins">📌 전문가 핀</span>
+      </div>
+
+      <!-- Active Pin Floating Card -->
+      <div id="m-active-pin-sheet" class="m-pin-sheet">
+        <div class="m-pin-header">
+          <span class="m-pin-name" id="m-pin-author">이상우 (인베이드) · 김학렬 (빠숑)</span>
+          <span class="m-pin-stance-badge" id="m-pin-stance" style="background:#f43f5e; color:#fff;">🔴 강력상승</span>
+        </div>
+        <div class="m-pin-quote" id="m-pin-quote">"서울 신축 아파트 공급 절벽으로 인해 핵심지는 신고가를 계속 경신할 것입니다."</div>
+        <div class="m-pin-meta">
+          <span id="m-pin-date">📅 2021년 08월</span>
+          <span id="m-pin-policy">🏛️ 8.4 공급대책 후속</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Section 2: Vertical 104-Month Situation Feed -->
+  <section id="m-sec-feed" class="m-section" style="display:none;">
+    <div class="m-section-header">
+      <h2 class="m-section-title">🕒 104개월 시간순 종합 연대기</h2>
+      <p class="m-section-desc">월별 [금리 × 정책 × 26개 지역 시세 × 전문가 뉘앙스] 세로형 피드</p>
+    </div>
+
+    <div class="m-matrix-feed" id="m-matrix-feed-container">
+      <!-- Populated dynamically by mobile.js -->
+    </div>
+  </section>
+
+  <!-- 5. Section 3: Vertical Leaderboard & 3M/6M/12M -->
+  <section id="m-sec-ranking" class="m-section" style="display:none;">
+    <div class="m-section-header">
+      <h2 class="m-section-title">🏆 전문가 20인 적중률 랭킹</h2>
+      <p class="m-section-desc">3M(초단기) · 6M(단중기) · 12M(중장기) 실현 적중률</p>
+    </div>
+
+    <div id="m-ranking-container">
+      <!-- Populated dynamically by mobile.js -->
+    </div>
+  </section>
+
+  <!-- 6. Section 4: Touch Knowledge Graph Links -->
+  <section id="m-sec-links" class="m-section" style="display:none;">
+    <div class="m-section-header">
+      <h2 class="m-section-title">🕸️ 부동산 인과 관계망 요약</h2>
+      <p class="m-section-desc">전문가 ↔ 정책 24대 ↔ 지역 26개 ↔ 금리 인과 매핑</p>
+    </div>
+
+    <div class="m-chart-card">
+      <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:8px;">💡 모바일 3D 인터랙티브 그래프</div>
+      <p style="font-size:12px; color:#94a3b8; margin-bottom:12px;">75개 노드와 174개 관계망을 3D로 직접 조작하려면 아래 전용 뷰어를 여세요.</p>
+      <a href="graph.html" style="display:block; text-align:center; background:#3b82f6; color:#fff; text-decoration:none; padding:10px; border-radius:8px; font-weight:700; font-size:13px;">🕸️ 3D 지식그래프 뷰어 열기</a>
+    </div>
+  </section>
+
+  <!-- 7. Footer & Desktop Switcher -->
+  <footer class="m-footer">
+    <p>대한민국 부동산 전문가 예측 교차분석 관제 시스템 (2018~2026)</p>
+    <button class="btn-switch-desktop" id="btn-force-desktop">🖥️ PC 데스크톱 버전으로 보기</button>
+  </footer>
+
+  <script src="mobile.js"></script>
+</body>
+</html>
