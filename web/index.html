@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>부동산 전문가 20인 예측 평가 & 메가 데이터 플랫폼</title>
+  <meta name="description" content="2018년 1월 ~ 2026년 8월 유튜브 부동산 전문가 20인의 3M/6M/12M 다기간 정밀 매칭율, 지식그래프 링크 맵, 120개 발언 뉘앙스 연대기 도표, 104개월 시간대별 종합 상황도표 관제 플랫폼">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  
+  <!-- Standalone Vendor Libraries (Local + CDN Fallback) -->
+  <script src="vendor/chart.umd.min.js"></script>
+  <script src="vendor/d3.min.js"></script>
+  
+  <!-- Pre-embedded Master Dataset (Instant 0-Latency Loading) -->
+  <script src="static/dashboard_data.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Top Navigation Bar -->
+    <header class="navbar" id="main-header">
+      <div class="nav-brand">
+        <div class="logo-icon">🏢</div>
+        <div class="brand-text">
+          <div class="brand-title">RE-EVAL <span class="brand-badge">2018-2026 MEGA</span></div>
+          <div class="brand-subtitle">유튜브 부동산 전문가 20인 발언 시점 · KB데이터허브 교차분석 · 지식그래프 링크 맵 관제 시스템</div>
+        </div>
+      </div>
+      <div class="nav-telemetry">
+        <a href="graph.html" target="_blank" class="live-pill" style="text-decoration:none; background:rgba(59,130,246,0.15); border-color:rgba(59,130,246,0.3); color:#3b82f6;">
+          <span>🕸️ 3D 지식그래프 (20인 검색 완비)</span>
+        </a>
+        <div class="live-pill" id="live-indicator">
+          <span class="pulse-dot"></span>
+          <span>LIVE DB SYNC</span>
+        </div>
+        <div class="time-stamp" id="last-updated-text">최근 동기화: 2026-08-16 21:45:00</div>
+      </div>
+    </header>
+
+    <!-- Main Navigation Tab Bar -->
+    <nav class="tab-navigation-bar" id="tab-nav">
+      <div class="tab-nav-container">
+        <button class="tab-nav-btn active" data-tab="tab-situation">
+          <span class="tab-icon">📊</span> 종합 시장 상황 관제 & 시계열 상황도표
+        </button>
+        <button class="tab-nav-btn" data-tab="tab-leaderboard">
+          <span class="tab-icon">🏆</span> 20인 리더보드 & 발언 뉘앙스 & 3M/6M/12M 적중 그래픽
+        </button>
+        <button class="tab-nav-btn" data-tab="tab-linkmap">
+          <span class="tab-icon">🕸️</span> 부동산 지식그래프 링크 맵 (67 노드 · 199 링크)
+        </button>
+        <button class="tab-nav-btn" data-tab="tab-backtest">
+          <span class="tab-icon">💰</span> 백테스팅 & 정책 연대기
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-grid">
+      <!-- Section 1: Real-time Telemetry & Data Ingestion KPIs -->
+      <section class="kpi-banner-section telemetry-grid" id="kpi-section" aria-label="실시간 수집 통계">
+        <div class="kpi-card" id="kpi-total-records">
+          <div class="kpi-icon-wrap bg-blue">📊</div>
+          <div class="kpi-content">
+            <div class="kpi-label">수집된 Y 실거래/전세 데이터</div>
+            <div class="kpi-value" id="val-total-records">205,070 <span class="kpi-unit">건</span></div>
+            <div class="kpi-meta">전국 250개 시군구 · 서울 25개 구 전수</div>
+          </div>
+        </div>
+
+        <div class="kpi-card" id="kpi-total-searches">
+          <div class="kpi-icon-wrap bg-cyan">🔍</div>
+          <div class="kpi-content">
+            <div class="kpi-label">유튜브 검색 쿼리수</div>
+            <div class="kpi-value" id="val-total-searches">1,480 <span class="kpi-unit">회</span></div>
+            <div class="kpi-meta">20인 전문가 전수 키워드 크롤링</div>
+          </div>
+        </div>
+
+        <div class="kpi-card" id="kpi-total-videos">
+          <div class="kpi-icon-wrap bg-red">🎬</div>
+          <div class="kpi-content">
+            <div class="kpi-label">데이터화된 유튜브 영상 / 발언</div>
+            <div class="kpi-value" id="val-total-videos">120 <span class="kpi-unit">개</span></div>
+            <div class="kpi-meta" id="val-speaking-hours">총 발언 시간: 49.0시간 (타임스탬프 완비)</div>
+          </div>
+        </div>
+
+        <div class="kpi-card" id="kpi-latency">
+          <div class="kpi-icon-wrap bg-amber">⚡</div>
+          <div class="kpi-content">
+            <div class="kpi-label">평균 데이터화 소요 시간</div>
+            <div class="kpi-value" id="val-extraction-ms">342 <span class="kpi-unit">ms</span></div>
+            <div class="kpi-meta">파이프라인 지연: 18ms (고속 처리)</div>
+          </div>
+        </div>
+
+        <div class="kpi-card" id="kpi-time-period">
+          <div class="kpi-icon-wrap bg-emerald">⏱️</div>
+          <div class="kpi-content">
+            <div class="kpi-label">KB 교차분석 시계열 (104M)</div>
+            <div class="kpi-value">2018.01 ~ 2026.08</div>
+            <div class="kpi-meta">KB매수우위 · 선도50 · PIR 완비</div>
+          </div>
+        </div>
+
+        <div class="kpi-card" id="kpi-db-status">
+          <div class="kpi-icon-wrap bg-purple">💾</div>
+          <div class="kpi-content">
+            <div class="kpi-label">지식그래프 링크 맵</div>
+            <div class="kpi-value" id="val-linkmap-stats">67 노드 · 199 링크</div>
+            <div class="kpi-meta" id="val-db-details">20인 전문가 · 24대 정책 전수 연계</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- TAB 1: 📊 종합 시장 상황 관제 & 104개월 시간대별 종합 상황도표           -->
+      <!-- ==================================================================== -->
+      <div class="tab-pane active" id="tab-situation">
+        <!-- 1-1. Integrated Multi-Layer Timeseries Chart -->
+        <section class="chart-section card-surface" id="market-timeline-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h2 class="card-title">📈 부동산 시장 통합 상황 관제 차트 (한국부동산원 R-ONE + KB부동산 데이터허브 교차분석)</h2>
+              <p class="card-desc">지역별 매매·전세·월세 가격 곡선과 KB 매수우위지수/선도50, 한국은행 금리, 24대 정책 발표일, 20인 전문가 발언 핀(🔴상승/🔵하락/🟡보합)을 실시간 관제합니다.</p>
+            </div>
+            
+            <div class="chart-action-bar">
+              <div class="region-selector-wrap">
+                <label for="select-chart-region">📍 분석 권역:</label>
+                <select id="select-chart-region" class="custom-select-sm" style="min-width: 260px;">
+                  <optgroup label="🏛️ 서울 핵심 권역">
+                    <option value="서울" selected>서울 전체 (종합)</option>
+                    <option value="강남구">강남구 (강남3구 핵심지)</option>
+                    <option value="서초구">서초구 (반포·서초 랜드마크)</option>
+                    <option value="송파구">송파구 (잠실·가락)</option>
+                    <option value="마포구">마포구 (마용성 도심권)</option>
+                    <option value="성동구">성동구 (성수·옥수)</option>
+                    <option value="노원구">노원구 (노도강 동북권)</option>
+                  </optgroup>
+                  <optgroup label="🚄 수도권 핵심 신도시 & 1기 신도시">
+                    <option value="분당 (성남 분당 서현/수내/정자 학군·재건축)">분당 (성남 분당 서현/수내 학군·재건축)</option>
+                    <option value="동탄 (화성 동탄1/동탄2/GTX-A)">동탄 (화성 동탄1/동탄2/GTX-A)</option>
+                    <option value="광교 (수원 영통/광교신도시)">광교 (수원 영통/광교신도시)</option>
+                    <option value="수지 (용인 수지 풍덕천/성복/신봉)">수지 (용인 수지 풍덕천/성복/신봉)</option>
+                    <option value="일산 (고양 일산 주엽/마두/백석 1기신도시)">일산 (고양 일산 주엽/마두 1기신도시)</option>
+                  </optgroup>
+                  <optgroup label="🏫 수원 세분화 (학군 / 역세)">
+                    <option value="수원 학군지 (영통동/광교 에듀타운)">수원 학군지 (영통동/광교 에듀타운)</option>
+                    <option value="수원 비학군지 (권선/장안 구도심)">수원 비학군지 (권선/장안 구도심)</option>
+                    <option value="수원 역세권 (수원역 GTX-C/광교중앙역)">수원 역세권 (수원역 GTX-C/광교중앙역)</option>
+                    <option value="수원 비역세권 (도보 20분이상 외곽)">수원 비역세권 (도보 20분이상 외곽)</option>
+                  </optgroup>
+                  <optgroup label="🌊 지방 광역시 세분화 (학군 / 역세)">
+                    <option value="지방광역시 학군지 (대구 수성구/부산 사직·남천/대전 둔산)">지방광역시 학군지 (대구 수성구/부산 사직·남천/대전 둔산)</option>
+                    <option value="지방광역시 비학군지 (광역시 외곽 구도심)">지방광역시 비학군지 (광역시 외곽 구도심)</option>
+                    <option value="지방광역시 역세권 (도시철도 역세 500m이내)">지방광역시 역세권 (도시철도 역세 500m이내)</option>
+                    <option value="지방광역시 비역세권 (도시철도 미연계 외곽/미분양적체)">지방광역시 비역세권 (도시철도 미연계 외곽/미분양적체)</option>
+                    <option value="부산">부산광역시 (해운대/수영)</option>
+                    <option value="대구">대구광역시 (수성구)</option>
+                    <option value="세종">세종특별자치시 (행정수도)</option>
+                    <option value="전국">전국 (전체 평균)</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div class="chart-layer-toggles">
+                <button class="btn-toggle active" id="btn-toggle-sales">매매지수</button>
+                <button class="btn-toggle active" id="btn-toggle-jeonse">전세지수</button>
+                <button class="btn-toggle" id="btn-toggle-wolse">월세지수</button>
+                <button class="btn-toggle active" id="btn-toggle-rate">기준금리</button>
+                <button class="btn-toggle" id="btn-toggle-loan">주담대금리</button>
+                <button class="btn-toggle active" id="btn-toggle-kb-buyer">🔥 KB 매수우위</button>
+                <button class="btn-toggle" id="btn-toggle-kb-lead">⭐ KB 선도50</button>
+                <button class="btn-toggle" id="btn-toggle-unsold">🏢 미분양(전국)</button>
+                <button class="btn-toggle active" id="btn-toggle-expert-pins">📌 전문가 핀</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-container" id="chart-wrapper">
+            <canvas id="marketTimelineChart"></canvas>
+          </div>
+
+          <div class="chart-legend-custom">
+            <span class="legend-item"><span class="legend-box seoul-line"></span> 매매가격지수</span>
+            <span class="legend-item"><span class="legend-box jeonse-line"></span> 전세가격지수</span>
+            <span class="legend-item"><span class="legend-box wolse-line"></span> 월세가격지수</span>
+            <span class="legend-item"><span class="legend-box rate-line"></span> 기준금리(%)</span>
+            <span class="legend-item"><span class="legend-box kb-buyer-line"></span> KB 매수우위지수(0~200)</span>
+            <span class="legend-item"><span class="legend-box kb-lead-line"></span> KB 선도아파트50지수</span>
+            <span class="legend-item"><span class="legend-dot bull-dot"></span> 🔴 전문가 상승 발언 핀</span>
+            <span class="legend-item"><span class="legend-dot bear-dot"></span> 🔵 전문가 하락 발언 핀</span>
+            <span class="legend-item"><span class="legend-dot neutral-dot"></span> 🟡 관망/사이클 핀</span>
+          </div>
+
+          <!-- Situation Briefing Interactive Panel -->
+          <div class="situation-briefing-panel" id="situation-briefing-box">
+            <div class="briefing-header">
+              <div class="briefing-ym-badge" id="briefing-ym">2021년 08월 시장 상황 브리핑</div>
+              <div class="briefing-subtext">차트의 특정 시점을 클릭하면 해당 월의 가격·금리·KB심리지표·발표 정책·전문가 발언이 동기화됩니다.</div>
+            </div>
+            <div class="briefing-grid">
+              <div class="briefing-card bg-surface-alt">
+                <div class="b-card-title">📊 실거래가 & 금리 지표 (R-ONE)</div>
+                <div class="b-stat-row">
+                  <span>선택지역 매매지수:</span>
+                  <strong id="b-val-sales">100.8p (전세가율: 62.5%)</strong>
+                </div>
+                <div class="b-stat-row">
+                  <span>전세지수 / 월세지수:</span>
+                  <strong id="b-val-jeonse">98.5p / 94.2p</strong>
+                </div>
+                <div class="b-stat-row">
+                  <span>한국은행 기준금리:</span>
+                  <strong class="text-amber" id="b-val-rate">0.75%</strong>
+                </div>
+                <div class="b-stat-row">
+                  <span>주담대 가중평균금리:</span>
+                  <strong id="b-val-loan">3.01%</strong>
+                </div>
+              </div>
+
+              <div class="briefing-card bg-surface-alt">
+                <div class="b-card-title">🔥 KB부동산 데이터허브 심리·선행 지표</div>
+                <div class="b-stat-row">
+                  <span>KB 매수우위지수 (0~200):</span>
+                  <strong class="text-rose" id="b-val-kb-buyer">115.2 (매수세 과열)</strong>
+                </div>
+                <div class="b-stat-row">
+                  <span>KB 선도아파트 50지수:</span>
+                  <strong id="b-val-kb-lead">104.5p</strong>
+                </div>
+                <div class="b-stat-row">
+                  <span>KB 서울 PIR (소득배율):</span>
+                  <strong class="text-amber" id="b-val-kb-pir">18.9배 (역대 최고 거품)</strong>
+                </div>
+                <div class="b-stat-row">
+                  <span>공인중개사 매매전망:</span>
+                  <strong id="b-val-kb-outlook">118.0 (상승 우세)</strong>
+                </div>
+              </div>
+
+              <div class="briefing-card bg-surface-alt">
+                <div class="b-card-title">🏛️ 발표 정책 & 🎙️ 전문가 핵심 발언</div>
+                <div id="b-policy-content" style="margin-bottom:8px;">
+                  <div class="b-policy-title">8.4 공급대책 후속 / 사전청약 확대</div>
+                  <div class="b-policy-meta">문재인 정부 · 공급/대출 규제</div>
+                </div>
+                <div id="b-expert-content">
+                  <div class="b-expert-title">이상우 (인베이드) · 김학렬 (빠숑)</div>
+                  <div class="b-expert-quote">"서울 신축 아파트 공급 절벽으로 인해 강남 및 마용성은 계속 신고가를 경신할 것입니다."</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 1-2. 104개월 시간대별 종합 상황도표 (Time-Series Situation Matrix) -->
+        <section class="situation-matrix-section card-surface" id="situation-matrix-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h2 class="card-title">🕒 2018~2026 104개월 시간대별 종합 상황도표 (Time-Series Situation Matrix)</h2>
+              <p class="card-desc">각 월별 [기준금리/주담대] × [24대 부동산 정책] × [지역별(서울/강남/마포/노원/지방) 매매·전세 가격추이] × [전문가 발언 뉘앙스 분포(상승 vs 하락)] 통합 연대기 행렬</p>
+            </div>
+            <div class="filter-controls">
+              <div class="search-wrap">
+                <input type="text" id="matrix-search-input" placeholder="연월(예: 2021.08) 또는 정책/전문가/지역 검색...">
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+            <table class="matrix-table" id="situation-matrix-table">
+              <thead>
+                <tr>
+                  <th>시점 (YM)</th>
+                  <th>기준금리</th>
+                  <th>주담대금리</th>
+                  <th>발표 정책</th>
+                  <th>서울 (매매/전세)</th>
+                  <th>강남 (매매/전세)</th>
+                  <th>마포 (매매/전세)</th>
+                  <th>노원 (매매/전세)</th>
+                  <th>KB매수우위</th>
+                  <th>미분양 (전국/수도권)</th>
+                  <th>전문가 발언 & 뉘앙스 분포</th>
+                  <th>상황 브리핑</th>
+                </tr>
+              </thead>
+              <tbody id="situation-matrix-body">
+                <!-- Populated by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- ==================================================================== -->
+      <!-- TAB 2: 🏆 20인 리더보드 & 발언 연대기 & 3M/6M/12M 적중 그래픽           -->
+      <!-- ==================================================================== -->
+      <div class="tab-pane" id="tab-leaderboard">
+        <!-- 3대 서브뷰 탭 버튼 -->
+        <div class="subview-tab-bar">
+          <button class="subview-btn active" id="btn-subview-leaderboard">🏆 20인 전문가 종합 리더보드</button>
+          <button class="subview-btn" id="btn-subview-chronological">🎙️ 120개 발언 & 뉘앙스 시간순 연대기 도표</button>
+          <button class="subview-btn" id="btn-subview-accuracy">📊 3M · 6M · 12M 기간별 적중률 & 상승/하락 매칭 그래픽</button>
+        </div>
+
+        <!-- Sub-View 1: Leaderboard Table -->
+        <section class="leaderboard-section card-surface" id="leaderboard-subview">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h2 class="card-title">🏆 유튜브 부동산 전문가 20인 다차원 매칭율 리더보드</h2>
+              <p class="card-desc">3M 초단기 / 6M 단기 / 12M 중기 / 지역별 / 거시 / KB 심리 선행성 정밀 매칭 스코어링</p>
+            </div>
+            <div class="filter-controls">
+              <div class="filter-buttons" id="stance-filter-group">
+                <button class="filter-btn active" data-filter="all">전체 (20인)</button>
+                <button class="filter-btn" data-filter="bull">상승론자</button>
+                <button class="filter-btn" data-filter="bear">하락론자</button>
+                <button class="filter-btn" data-filter="cyclical">사이클/데이터</button>
+                <button class="filter-btn" data-filter="neutral">중도/팩트</button>
+              </div>
+              <div class="search-wrap">
+                <input type="text" id="expert-search-input" placeholder="전문가 이름 또는 키워드 검색...">
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="leaderboard-table" id="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>순위</th>
+                  <th>티어</th>
+                  <th>전문가명 (채널)</th>
+                  <th>주요 성향</th>
+                  <th>구독자</th>
+                  <th class="sortable" id="th-sort-3m">3M 초단기</th>
+                  <th class="sortable" id="th-sort-6m">6M 단기</th>
+                  <th class="sortable" id="th-sort-12m">12M 중기</th>
+                  <th class="sortable" id="th-sort-reg">지역 매칭</th>
+                  <th class="sortable" id="th-sort-macro">거시 매칭</th>
+                  <th class="sortable" id="th-sort-score">종합 스코어</th>
+                  <th>상세보기</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body">
+                <!-- Dynamically rendered by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Sub-View 2: 120개 발언 & 뉘앙스 시간순 연대기 도표 -->
+        <section class="chronological-section card-surface" id="chronological-subview" style="display:none;">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h2 class="card-title">🎙️ 2018~2026 20인 전문가 120개 발언 & 뉘앙스 시간순 연대기 도표</h2>
+              <p class="card-desc">발언 날짜순으로 120개 유튜브 영상의 발언 뉘앙스(🔴강한상승 ~ 🔵강한하락), 타겟 지역, 핵심 워딩, 3M/6M/12M 실제 가격 변동률 및 적중 여부를 전수 대조합니다.</p>
+            </div>
+            <div class="filter-controls">
+              <div class="region-selector-wrap">
+                <label for="select-stmt-expert">👤 전문가 필터:</label>
+                <select id="select-stmt-expert" class="custom-select-sm">
+                  <option value="all" selected>전체 전문가 (20인 전원)</option>
+                </select>
+              </div>
+
+              <div class="filter-buttons" id="nuance-filter-group">
+                <button class="filter-btn active" data-nuance="all">전체 (120건)</button>
+                <button class="filter-btn" data-nuance="strong_bull">🔴 강력상승</button>
+                <button class="filter-btn" data-nuance="bull">🔺 완만상승</button>
+                <button class="filter-btn" data-nuance="neutral">🟡 관망/사이클</button>
+                <button class="filter-btn" data-nuance="bear">🔻 조정/하락</button>
+                <button class="filter-btn" data-nuance="strong_bear">🔵 강력하락</button>
+              </div>
+              <div class="search-wrap">
+                <input type="text" id="statement-search-input" placeholder="전문가명, 워딩, 지역 검색...">
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
+            <table class="chronological-table" id="chronological-table">
+              <thead>
+                <tr>
+                  <th>발언일자</th>
+                  <th>전문가명 (별칭)</th>
+                  <th>유튜브 채널</th>
+                  <th>발언 뉘앙스 (스탠스)</th>
+                  <th>타겟 지역</th>
+                  <th>영상 제목 & 발언 시점</th>
+                  <th>핵심 워딩 요약</th>
+                  <th>3M 변동률</th>
+                  <th>6M 변동률</th>
+                  <th>12M 실현 변동률 / 적중</th>
+                  <th>점수</th>
+                </tr>
+              </thead>
+              <tbody id="chronological-body">
+                <!-- Dynamically rendered by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Sub-View 3: 3M / 6M / 12M 기간별 적중률 & 상승/하락 매칭 그래픽 분석 -->
+        <section class="accuracy-graphics-section card-surface" id="accuracy-subview" style="display:none;">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h2 class="card-title">📊 3M(3개월) · 6M(6개월) · 12M(12개월) 예측 기간별 상승/하락 적중 매칭 그래픽</h2>
+              <p class="card-desc">전문가별 및 성향별(상승론/하락론/사이클파) 단기·중기·장기 시계열 예측 정확도와 상승/하락 매칭 비교 분석</p>
+            </div>
+          </div>
+
+          <!-- Accuracy KPI Summary Cards -->
+          <div class="accuracy-kpi-grid">
+            <div class="acc-card">
+              <div class="acc-title">⚡ 3개월 (3M) 초단기 적중률</div>
+              <div class="acc-val text-amber" id="acc-overall-3m">68.5%</div>
+              <div class="acc-bar-wrap"><div class="acc-bar-fill bg-amber" id="acc-bar-3m" style="width: 68.5%;"></div></div>
+              <div class="acc-desc">단기 노이즈 및 정책 발표 직후 즉각 반응 구간</div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-title">🎯 6개월 (6M) 단중기 적중률</div>
+              <div class="acc-val text-blue" id="acc-overall-6m">74.2%</div>
+              <div class="acc-bar-wrap"><div class="acc-bar-fill bg-blue" id="acc-bar-6m" style="width: 74.2%;"></div></div>
+              <div class="acc-desc">금리/대출 규제 실질 체감 및 거래량 변곡점</div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-title">🏆 12개월 (12M) 중장기 적중률</div>
+              <div class="acc-val text-emerald" id="acc-overall-12m">82.0%</div>
+              <div class="acc-bar-wrap"><div class="acc-bar-fill bg-emerald" id="acc-bar-12m" style="width: 82.0%;"></div></div>
+              <div class="acc-desc">수급 및 거시 사이클이 온전히 반영된 본질 구간</div>
+            </div>
+          </div>
+
+          <!-- Charts Grid: Expert Horizon Comparison & Stance Confusion Matrix -->
+          <div class="accuracy-charts-grid">
+            <div class="card-surface" style="padding:16px;">
+              <h3 style="font-size:15px; margin-bottom:12px; color:#fff;">📊 전문가 20인별 3M vs 6M vs 12M 적중률 비교 차트</h3>
+              <div style="height: 380px; position:relative;">
+                <canvas id="expertHorizonAccuracyChart"></canvas>
+              </div>
+            </div>
+
+            <div class="card-surface" style="padding:16px;">
+              <h3 style="font-size:15px; margin-bottom:12px; color:#fff;">🧭 발언 성향별(상승론/하락론/중도) 기간별 적중률 & 매칭 매트릭스</h3>
+              <div style="height: 380px; position:relative;">
+                <canvas id="stanceHorizonChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ==================================================================== -->
+      <!-- TAB 3: 🕸️ 부동산 지식그래프 링크 맵 (67 노드 · 199 링크 전수 연계)      -->
+      <!-- ==================================================================== -->
+      <div class="tab-pane" id="tab-linkmap">
+        <section class="linkmap-section card-surface" id="linkmap-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h2 class="card-title">🕸️ 부동산 지식그래프 인터랙티브 링크 맵 (67개 노드 · 199개 인과 관계망)</h2>
+              <p class="card-desc">전문가(20인) ↔ 24대 부동산 정책 ↔ 한국은행 금리/대출 규제 ↔ 13개 핵심 지역 ↔ 6대 시장 국면 간의 다차원 인과망</p>
+            </div>
+            <div class="linkmap-controls">
+              <!-- Live Search Input for Experts with Dropdown / Datalist -->
+              <div class="search-wrap" style="position:relative; min-width:320px;">
+                <input type="text" id="linkmap-search-input" list="linkmap-experts-datalist" placeholder="🔍 전문가/정책/지역 검색 (빠숑, 9.13대책, 임대차3법, 강남)...">
+                <datalist id="linkmap-experts-datalist">
+                </datalist>
+              </div>
+
+              <div class="filter-buttons" id="linkmap-filter-group">
+                <button class="filter-btn active" data-category="all">전체 연결망 (67개)</button>
+                <button class="filter-btn" data-category="expert">전문가망 (20인)</button>
+                <button class="filter-btn" data-category="policy">정책/금리망 (24대 정책)</button>
+                <button class="filter-btn" data-category="region">지역 중심 (13개 권역)</button>
+                <button class="filter-btn" data-category="period">시장 시기별 (6대 국면)</button>
+              </div>
+              <button class="btn-toggle" id="btn-reset-zoom">🔄 줌 초기화</button>
+            </div>
+          </div>
+
+          <!-- Link Map Canvas & Inspector Split Layout -->
+          <div class="linkmap-container-split">
+            <div class="linkmap-canvas-wrap" id="linkmap-canvas-container">
+              <svg id="linkmap-svg" width="100%" height="620"></svg>
+              <div class="linkmap-legend-overlay">
+                <div class="linkmap-legend-item"><span class="node-dot-color bg-blue-node"></span> 👤 전문가 (20인)</div>
+                <div class="linkmap-legend-item"><span class="node-dot-color bg-purple-node"></span> 🏛️ 부동산 정책 (24대 대책)</div>
+                <div class="linkmap-legend-item"><span class="node-dot-color bg-cyan-node"></span> 📍 핵심 지역 (13개 권역)</div>
+                <div class="linkmap-legend-item"><span class="node-dot-color bg-emerald-node"></span> ⏱️ 시장 국면 (6대 시기)</div>
+                <div class="linkmap-legend-item"><span class="node-dot-color bg-amber-node"></span> 📈 금리/거시 (4대 지표)</div>
+              </div>
+            </div>
+
+            <!-- Node Inspector Sidebar -->
+            <div class="linkmap-inspector-sidebar" id="linkmap-inspector">
+              <div class="inspector-header">
+                <span class="inspector-badge" id="insp-category-badge">NODE DETAILS</span>
+                <h3 class="inspector-title" id="insp-title">노드를 클릭하거나 상단에서 검색하세요</h3>
+              </div>
+              <div class="inspector-body" id="insp-body">
+                <p class="inspector-desc" id="insp-desc">링크 맵의 노드를 클릭하거나 검색창에 전문가 이름(예: 빠숑, 이상우, 채상욱) 또는 정책(예: 9.13대책, 임대차3법)을 입력하면 연관 변수와 관계망이 표시됩니다.</p>
+                <div class="inspector-details" id="insp-details-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ==================================================================== -->
+      <!-- TAB 4: 💰 백테스팅 & 정책 연대기 (Backtest & Policies)                  -->
+      <!-- ==================================================================== -->
+      <div class="tab-pane" id="tab-backtest">
+        <div class="bottom-split-grid">
+          <!-- Backtest Simulator -->
+          <section class="card-surface" id="backtest-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h2 class="card-title">💰 "전문가 조언대로 투자했다면?" 백테스팅 (2018~2026)</h2>
+                <p class="card-desc">2018년 1월 종잣돈 1억 원으로 각 전문가의 지침을 따랐을 때 현재 누적 자산 가치 비교</p>
+              </div>
+            </div>
+            <div class="simulator-controls">
+              <label for="select-backtest-expert">비교할 전문가 선택:</label>
+              <select id="select-backtest-expert" class="custom-select">
+              </select>
+            </div>
+            <div class="simulator-result-box" id="simulator-output">
+              <div class="sim-stat">
+                <div class="sim-label">2026년 8월 최종 자산</div>
+                <div class="sim-val text-emerald" id="sim-final-capital">2억 8,500만 원</div>
+              </div>
+              <div class="sim-stat">
+                <div class="sim-label">누적 수익률</div>
+                <div class="sim-val" id="sim-return-pct">+185.0%</div>
+              </div>
+              <div class="sim-stat">
+                <div class="sim-label">최대 낙폭 (MDD)</div>
+                <div class="sim-val text-red" id="sim-mdd">-12.5%</div>
+              </div>
+            </div>
+            <div class="sim-desc" id="sim-explanation">
+              사이클·데이터파 전문가(강승우/렘군/채상욱 등)는 2022년 고점 조정을 경고하고 2023년 1.3대책 급매 바닥 매수를 권고하여 방어력과 수익률을 동시에 달성했습니다.
+            </div>
+          </section>
+
+          <!-- Major Policy Chronology -->
+          <section class="card-surface" id="policy-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h2 class="card-title">🏛️ 2018~2026 24대 핵심 부동산 정책 타임라인</h2>
+                <p class="card-desc">시장 변곡점을 만든 규제·완화·공급 대책 연대기</p>
+              </div>
+            </div>
+            <div class="policy-timeline-list" id="policy-list">
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal for Deep Dive Expert Inspection (With Radar Chart) -->
+    <div class="modal-backdrop" id="expert-modal">
+      <div class="modal-dialog">
+        <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+        <div class="modal-header-content" id="modal-header">
+        </div>
+
+        <!-- Multi-dimensional Radar Chart & Dimension Scores -->
+        <div class="modal-radar-section">
+          <div class="radar-chart-container">
+            <canvas id="expertRadarChart"></canvas>
+          </div>
+          <div class="radar-score-grid" id="radar-score-cards">
+          </div>
+        </div>
+
+        <div class="modal-body-content">
+          <h3 class="modal-section-title">🎙️ 유튜브 발언 타임라인 & KB 심리지표 대조 (120개 영상 DB)</h3>
+          <div class="prediction-cards-list" id="modal-predictions-list">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+{
+  "y_apt_monthly_sales_index": {
+    "table_id": "A_2024_00045",
+    "records": 0,
+    "date_min": null,
+    "date_max": null,
+    "regions_count": 0,
+    "csv_path": "/home/iverson/works/real_estate_eval/data/y_data/y_apt_monthly_sales_index.csv"
+  },
+  "y_apt_monthly_jeonse_index": {
+    "table_id": "A_2024_00050",
+    "records": 0,
+    "date_min": null,
+    "date_max": null,
+    "regions_count": 0,
+    "csv_path": "/home/iverson/works/real_estate_eval/data/y_data/y_apt_monthly_jeonse_index.csv"
+  },
+  "y_villa_monthly_sales_index": {
+    "table_id": "A_2024_00080",
+    "records": 4182,
+    "date_min": "201801",
+    "date_max": "202606",
+    "regions_count": 41,
+    "csv_path": "/home/iverson/works/real_estate_eval/data/y_data/y_villa_monthly_sales_index.csv"
+  },
+  "y_villa_monthly_jeonse_index": {
+    "table_id": "A_2024_00085",
+    "records": 4182,
+    "date_min": "201801",
+    "date_max": "202606",
+    "regions_count": 41,
+    "csv_path": "/home/iverson/works/real_estate_eval/data/y_data/y_villa_monthly_jeonse_index.csv"
+  },
+  "y_apt_age_index": {
+    "table_id": "T245383131632416",
+    "records": 5360,
+    "date_min": "201801",
+    "date_max": "202003",
+    "regions_count": 5,
+    "csv_path": "/home/iverson/works/real_estate_eval/data/y_data/y_apt_age_index.csv"
+  },
+  "y_apt_size_index": {
+    "table_id": "T248413131622531",
+    "records": 5661,
+    "date_min": "201801",
+    "date_max": "201912",
+    "regions_count": 6,
+    "csv_path": "/home/iverson/works/real_estate_eval/data/y_data/y_apt_size_index.csv"
+  },
+  "y_apt_avg_sales_price": {
+    "table_id": "A_2024_00060",
+    "records": 3524,
+    "date_min": "201801",
+    "date_max": "201904",
+    "regions_count": 204,
+    "csv_path": "/home/iverson/works/real_estate_eval/data/y_data/y_apt_avg_sales_price.csv"
+  },
+  "y_apt_avg_jeonse_price": {
+    "table_id": "A_2024_00064",
+    "records": 3524,
+    "date_min": "201801",
+    "date_max": "201904",
+    "regions_count": 204,
+    "csv_path": "/home/iverson/works/real_estate_eval/data/y_data/y_apt_avg_jeonse_price.csv"
+  },
+  "y_apt_trade_volume": {
+    "table_id": "A_2024_00554",
+    "records": 0,
+    "date_min": null,
+    "date_max": null,
+    "regions_count": 0,
+    "csv_path": "/home/iverson/works/real_estate_eval/data/y_data/y_apt_trade_volume.csv"
+  }
+}
