@@ -108,6 +108,10 @@
       <p class="m-section-desc">월별 [금리 × 정책 × 26개 지역 시세 × 전문가 뉘앙스] 세로형 피드</p>
     </div>
 
+    <div style="margin-bottom: 12px;">
+      <input type="text" id="m-feed-search" placeholder="연월(예: 2021.08) 또는 정책/전문가 검색..." style="width:100%; background:var(--m-surface-card); color:#fff; border:1px solid var(--m-border); padding:8px 12px; border-radius:8px; font-size:12.5px; outline:none;">
+    </div>
+
     <div class="m-matrix-feed" id="m-matrix-feed-container">
       <!-- Populated dynamically by mobile.js -->
     </div>
@@ -117,7 +121,11 @@
   <section id="m-sec-ranking" class="m-section" style="display:none;">
     <div class="m-section-header">
       <h2 class="m-section-title">🏆 전문가 20인 적중률 랭킹</h2>
-      <p class="m-section-desc">3M(초단기) · 6M(단중기) · 12M(중장기) 실현 적중률</p>
+      <p class="m-section-desc">3M(초단기) · 6M(단중기) · 12M(중장기) 실현 적중률 (카드를 터치하면 세부 발언이 펼쳐집니다)</p>
+    </div>
+
+    <div style="margin-bottom: 12px;">
+      <input type="text" id="m-ranking-search" placeholder="전문가 이름 또는 채널명 검색..." style="width:100%; background:var(--m-surface-card); color:#fff; border:1px solid var(--m-border); padding:8px 12px; border-radius:8px; font-size:12.5px; outline:none;">
     </div>
 
     <div id="m-ranking-container">

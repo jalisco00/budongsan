@@ -254,13 +254,32 @@ function updateMobilePinSheet(ym, stat, policy, pins) {
 }
 
 // 4. Render Vertical 104-Month Situation Feed
-function renderMobileFeed() {
+function renderMobileFeed(query = '') {
   const container = document.getElementById('m-matrix-feed-container');
   if (!container || !mData.chronological_matrix) return;
 
   container.innerHTML = '';
   // Show in reverse chronological order (latest first)
-  const list = [...mData.chronological_matrix].reverse();
+  let list = [...mData.chronological_matrix].reverse();
+
+  if (query) {
+    const q = query.toLowerCase();
+    list = list.filter(row => {
+      const matchYm = row.YEAR_MONTH.toLowerCase().includes(q);
+      const matchPol = row.POLICY && (row.POLICY.TITLE.toLowerCase().includes(q) || row.POLICY.IMPACT_SUMMARY.toLowerCase().includes(q));
+      const matchStmts = row.STATEMENTS && row.STATEMENTS.some(s => 
+        s.EXPERT_NAME.toLowerCase().includes(q) || 
+        s.ALIAS.toLowerCase().includes(q) || 
+        s.KEY_WORDING.toLowerCase().includes(q)
+      );
+      return matchYm || matchPol || matchStmts;
+    });
+  }
+
+  if (list.length === 0) {
+    container.innerHTML = `<div style="text-align:center; padding:30px; color:#64748b;">검색 조건에 일치하는 월별 상황 데이터가 없습니다.</div>`;
+    return;
+  }
 
   list.forEach(row => {
     const card = document.createElement('div');
@@ -276,7 +295,7 @@ function renderMobileFeed() {
       const s = row.STATEMENTS[0];
       const rOp = (s.REGIONAL_OPINIONS && s.REGIONAL_OPINIONS[mCurrentRegion]) ? s.REGIONAL_OPINIONS[mCurrentRegion] : null;
       const opText = rOp ? rOp.OPINION : s.KEY_WORDING;
-      quoteHtml = `<div class="m-matrix-quote"><strong>${s.EXPERT_NAME}</strong>: "${opText.substring(0, 48)}..."</div>`;
+      quoteHtml = `<div class="m-matrix-quote"><strong>${s.EXPERT_NAME}</strong>: "${opText.substring(0, 52)}..."</div>`;
     }
 
     card.innerHTML = `
@@ -286,7 +305,7 @@ function renderMobileFeed() {
       </div>
       <div class="m-matrix-price-grid">
         <div class="m-stat-box">
-          <div class="m-stat-label">서울 매매/전세</div>
+          <div class="m-stat-label">${mCurrentRegion.split(' ')[0]} 매매/전세</div>
           <div class="m-stat-value">${row.SEOUL_SALES}p / <span style="color:#10b981;">${row.SEOUL_JEONSE}p</span></div>
         </div>
         <div class="m-stat-box">
@@ -302,16 +321,51 @@ function renderMobileFeed() {
   });
 }
 
-// 5. Render Vertical Leaderboard Cards
-function renderMobileLeaderboard() {
+// 5. Render Vertical Leaderboard Cards with Expandable Details
+function renderMobileLeaderboard(query = '') {
   const container = document.getElementById('m-ranking-container');
   if (!container || !mData.experts) return;
 
   container.innerHTML = '';
+  let list = [...mData.experts];
 
-  mData.experts.forEach(exp => {
+  if (query) {
+    const q = query.toLowerCase();
+    list = list.filter(exp => 
+      exp.NAME.toLowerCase().includes(q) || 
+      exp.ALIAS.toLowerCase().includes(q) || 
+      exp.CHANNEL_NAME.toLowerCase().includes(q) ||
+      exp.KEYWORDS.toLowerCase().includes(q)
+    );
+  }
+
+  if (list.length === 0) {
+    container.innerHTML = `<div style="text-align:center; padding:30px; color:#64748b;">검색된 전문가가 없습니다.</div>`;
+    return;
+  }
+
+  list.forEach(exp => {
     const card = document.createElement('div');
     card.className = 'm-expert-card';
+    card.style.cursor = 'pointer';
+
+    const preds = exp.PREDICTIONS || [];
+    let predsHtml = '';
+    preds.forEach(p => {
+      const hitBadge = p.ACCURACY_HIT_12M === 1 ? 
+        `<span style="color:#10b981; font-weight:700;">✓ 적중</span>` : 
+        `<span style="color:#f43f5e; font-weight:700;">✗ 오판</span>`;
+      predsHtml += `
+        <div style="background:rgba(255,255,255,0.03); padding:6px 8px; border-radius:6px; margin-top:6px; font-size:11.5px; border-left:2px solid #3b82f6;">
+          <div style="display:flex; justify-content:space-between; color:#94a3b8; font-size:10.5px;">
+            <span>${p.STATEMENT_DATE}</span>
+            <span>${hitBadge}</span>
+          </div>
+          <div style="color:#fff; font-weight:600; margin:2px 0;">"${p.KEY_WORDING}"</div>
+          <div style="color:#64748b; font-size:10.5px;">예측: ${p.PREDICTED_STANCE} | 12M 실현: ${p.RETURN_12M_PCT ? p.RETURN_12M_PCT + '%' : 'N/A'}</div>
+        </div>
+      `;
+    });
 
     card.innerHTML = `
       <div class="m-exp-head">
@@ -333,10 +387,27 @@ function renderMobileLeaderboard() {
           <div class="m-acc-val" style="color:#10b981;">${exp.HIT_RATE_12M}%</div>
         </div>
       </div>
-      <div style="font-size:12px; color:#cbd5e1; background:rgba(0,0,0,0.2); padding:6px 8px; border-radius:6px;">
-        💡 <strong>핵심 성향</strong>: ${exp.STANCE_GROUP} · ${exp.CORE_THEME}
+      <div style="font-size:12px; color:#cbd5e1; background:rgba(0,0,0,0.2); padding:6px 8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+        <span>💡 <strong>성향</strong>: ${exp.STANCE_GROUP}</span>
+        <span class="m-exp-toggle-icon" style="font-size:11px; color:#38bdf8;">발언 내역 ▼</span>
+      </div>
+      <div class="m-exp-details" style="display:none; margin-top:8px; border-top:1px solid rgba(255,255,255,0.06); padding-top:6px;">
+        <div style="font-size:11.5px; font-weight:700; color:#cbd5e1; margin-bottom:4px;">🎙️ 주요 6대 영상 발언 및 12M 적중 내역:</div>
+        ${predsHtml}
       </div>
     `;
+
+    card.addEventListener('click', function(e) {
+      const details = this.querySelector('.m-exp-details');
+      const toggleIcon = this.querySelector('.m-exp-toggle-icon');
+      if (details.style.display === 'none') {
+        details.style.display = 'block';
+        if (toggleIcon) toggleIcon.textContent = '접기 ▲';
+      } else {
+        details.style.display = 'none';
+        if (toggleIcon) toggleIcon.textContent = '발언 내역 ▼';
+      }
+    });
 
     container.appendChild(card);
   });
@@ -426,6 +497,16 @@ function setupMobileEvents() {
     this.classList.toggle('active');
     mChart.setDatasetVisibility(4, this.classList.contains('active'));
     mChart.update();
+  });
+
+  // Feed Search Filter
+  document.getElementById('m-feed-search')?.addEventListener('input', function() {
+    renderMobileFeed(this.value.trim());
+  });
+
+  // Leaderboard Search Filter
+  document.getElementById('m-ranking-search')?.addEventListener('input', function() {
+    renderMobileLeaderboard(this.value.trim());
   });
 
   // Force Desktop Switcher
