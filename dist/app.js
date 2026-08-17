@@ -1507,4 +1507,16 @@ function setupEventListeners() {
       document.getElementById('expert-modal').classList.remove('open');
     }
   });
+
+  // Global Responsive Scale Up/Down & Zoom Handler
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      if (marketChart) marketChart.resize();
+      if (expertHorizonChart) expertHorizonChart.resize();
+      if (stanceHorizonChart) stanceHorizonChart.resize();
+      if (expertRadarChart) expertRadarChart.resize();
+    }, 150);
+  });
 }

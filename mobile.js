@@ -514,4 +514,13 @@ function setupMobileEvents() {
     sessionStorage.setItem('FORCE_DESKTOP_VIEW', 'true');
     window.location.href = 'index.html';
   });
+
+  // Mobile Orientation & Window Resize Handler
+  let mResizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(mResizeTimeout);
+    mResizeTimeout = setTimeout(() => {
+      if (mChart) mChart.resize();
+    }, 150);
+  });
 }

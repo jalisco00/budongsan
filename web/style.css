@@ -168,12 +168,14 @@ body {
 }
 
 .tab-nav-container {
-  max-width: 1440px;
+  max-width: 1680px;
+  width: 100%;
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
   gap: 8px;
   overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .tab-nav-btn {
@@ -256,13 +258,13 @@ body {
 /* 3. Main Layout */
 .dashboard-grid {
   flex: 1;
-  max-width: 1440px;
+  max-width: 1680px;
+  width: 100%;
   margin: 0 auto;
-  padding: 24px 24px 60px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 100%;
 }
 
 /* 4. Telemetry KPI Grid */
@@ -1473,7 +1475,27 @@ body {
   margin-top: 2px;
 }
 
-/* 13. Responsive Breakpoints */
+/* 13. Responsive Breakpoints & Fluid Scaling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(11, 15, 25, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+@media (max-width: 1440px) {
+  .dashboard-grid { padding: 20px 16px; gap: 20px; }
+  .telemetry-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
 @media (max-width: 1200px) {
   .telemetry-grid { grid-template-columns: repeat(3, 1fr); }
   .briefing-grid { grid-template-columns: 1fr; }
@@ -1483,14 +1505,18 @@ body {
   .accuracy-kpi-grid { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 992px) {
+  .navbar { padding: 12px 18px; }
+  .brand-subtitle { display: none; }
   .bottom-split-grid { grid-template-columns: 1fr; }
   .telemetry-grid { grid-template-columns: repeat(2, 1fr); }
+  .tab-nav-btn { font-size: 13px; padding: 12px 14px; }
 }
 
-@media (max-width: 640px) {
-  .navbar { padding: 12px 16px; }
-  .dashboard-grid { padding: 16px 12px; }
+@media (max-width: 768px) {
+  .navbar { padding: 10px 14px; flex-wrap: wrap; gap: 10px; }
+  .dashboard-grid { padding: 14px 10px; }
   .telemetry-grid { grid-template-columns: 1fr; }
+  .chart-controls-bar { flex-direction: column; align-items: flex-start; }
 }
 
